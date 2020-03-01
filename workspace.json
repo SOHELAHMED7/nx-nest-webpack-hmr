@@ -1,8 +1,66 @@
 {
   "version": 1,
-  "projects": {},
+  "projects": {
+    "mynestapp": {
+      "root": "apps/mynestapp",
+      "sourceRoot": "apps/mynestapp/src",
+      "projectType": "application",
+      "prefix": "mynestapp",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "outputPath": "dist/apps/mynestapp",
+            "main": "apps/mynestapp/src/main.ts",
+            "tsConfig": "apps/mynestapp/tsconfig.app.json",
+            "assets": ["apps/mynestapp/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/mynestapp/src/environments/environment.ts",
+                  "with": "apps/mynestapp/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "mynestapp:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "config": "apps/mynestapp/.eslintrc",
+            "tsConfig": [
+              "apps/mynestapp/tsconfig.app.json",
+              "apps/mynestapp/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/mynestapp/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/mynestapp/jest.config.js",
+            "tsConfig": "apps/mynestapp/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    }
+  },
   "cli": {
-    "defaultCollection": "@nrwl/workspace"
+    "defaultCollection": "@nrwl/nest"
   },
   "schematics": {
     "@nrwl/workspace": {
@@ -56,5 +114,6 @@
         "linter": "eslint"
       }
     }
-  }
+  },
+  "defaultProject": "mynestapp"
 }
